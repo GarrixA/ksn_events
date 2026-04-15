@@ -1,0 +1,130 @@
+/* Example: Theme Switching Capability */
+/* This file demonstrates how easy it is to add theme switching with the new color system */
+
+/* Light Theme Variables (for future implementation) */
+[data-theme="light"] {
+  /* Background Colors */
+  --bg-primary: #ffffff;        /* White main background */
+  --bg-secondary: #f8fafc;      /* Very light gray cards */
+  --bg-tertiary: #f1f5f9;       /* Light gray inputs */
+  --bg-quaternary: #e2e8f0;     /* Subtle light gray */
+  --bg-overlay: rgba(15, 23, 42, 0.6); /* Dark overlay for light theme */
+  
+  /* Text Colors */
+  --text-primary: #0f172a;      /* Dark text on light background */
+  --text-secondary: #475569;    /* Medium gray text */
+  --text-tertiary: #64748b;     /* Light gray text */
+  --text-muted: #94a3b8;        /* Very light gray text */
+  
+  /* Border Colors */
+  --border-primary: #e2e8f0;    /* Light borders */
+  --border-secondary: #cbd5e1;  /* Slightly darker borders */
+  --border-tertiary: #94a3b8;   /* Darker borders for focus */
+  
+  /* Interactive States */
+  --hover-bg: #f1f5f9;          /* Light hover background */
+  --hover-bg-light: #f8fafc;    /* Very light hover background */
+  --focus-ring: rgba(59, 130, 246, 0.3); /* Blue focus ring */
+  
+  /* Accent Colors (can remain the same or adjust) */
+  --accent-primary: #1e293b;    /* Dark primary for light theme */
+  --accent-primary-hover: #334155; /* Darker hover */
+}
+
+/* Blue Theme Variables (alternative color scheme) */
+[data-theme="blue"] {
+  /* Background Colors */
+  --bg-primary: #1e3a8a;        /* Deep blue */
+  --bg-secondary: #1e40af;      /* Medium blue */
+  --bg-tertiary: #2563eb;       /* Lighter blue */
+  --bg-quaternary: #3b82f6;     /* Light blue */
+  
+  /* Text Colors */
+  --text-primary: #ffffff;      /* White text */
+  --text-secondary: #dbeafe;    /* Very light blue */
+  --text-tertiary: #bfdbfe;     /* Light blue */
+  --text-muted: #93c5fd;        /* Muted blue */
+  
+  /* Accent Colors */
+  --accent-primary: #ffffff;    /* White buttons on blue */
+  --accent-primary-hover: #f3f4f6; /* Light gray hover */
+}
+
+/* Purple Theme Variables (another alternative) */
+[data-theme="purple"] {
+  --bg-primary: #581c87;        /* Deep purple */
+  --bg-secondary: #7c3aed;      /* Medium purple */
+  --bg-tertiary: #8b5cf6;       /* Light purple */
+  --bg-quaternary: #a78bfa;     /* Very light purple */
+  
+  --text-primary: #ffffff;
+  --text-secondary: #ede9fe;
+  --text-tertiary: #ddd6fe;
+  --text-muted: #c4b5fd;
+  
+  --accent-primary: #ffffff;
+  --accent-primary-hover: #f3f4f6;
+}
+
+/* JavaScript Theme Switching Example */
+/*
+// Theme switching function
+function setTheme(themeName) {
+  document.documentElement.setAttribute('data-theme', themeName);
+  localStorage.setItem('theme', themeName);
+}
+
+// Load saved theme on page load
+function loadTheme() {
+  const savedTheme = localStorage.getItem('theme') || 'dark';
+  setTheme(savedTheme);
+}
+
+// Theme toggle component example
+function ThemeToggle() {
+  const [theme, setCurrentTheme] = useState('dark');
+  
+  const toggleTheme = () => {
+    const newTheme = theme === 'dark' ? 'light' : 'dark';
+    setCurrentTheme(newTheme);
+    setTheme(newTheme);
+  };
+  
+  return (
+    <button onClick={toggleTheme} className="btn-primary">
+      Switch to {theme === 'dark' ? 'Light' : 'Dark'} Theme
+    </button>
+  );
+}
+
+// Multi-theme selector
+function ThemeSelector() {
+  const themes = ['dark', 'light', 'blue', 'purple'];
+  
+  return (
+    <select onChange={(e) => setTheme(e.target.value)} className="input-field">
+      {themes.map(theme => (
+        <option key={theme} value={theme}>
+          {theme.charAt(0).toUpperCase() + theme.slice(1)} Theme
+        </option>
+      ))}
+    </select>
+  );
+}
+*/
+
+/* System Preference Detection */
+/*
+@media (prefers-color-scheme: light) {
+  :root {
+    // Automatically apply light theme variables if user prefers light mode
+    // and no theme is explicitly set
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    // Dark theme variables (already set by default)
+  }
+}
+*/

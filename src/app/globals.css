@@ -1,0 +1,151 @@
+@import "tailwindcss";
+
+:root {
+  /* Dark Theme Color System */
+  
+  /* Background Colors */
+  --bg-primary: #0f172a;        /* slate-900 - Main page background */
+  --bg-secondary: #1e293b;      /* slate-800 - Card/component background */
+  --bg-tertiary: #334155;       /* slate-700 - Input/elevated background */
+  --bg-quaternary: #475569;     /* slate-600 - Subtle background */
+  --bg-overlay: rgba(0, 0, 0, 0.7); /* Modal overlay */
+  
+  /* Text Colors */
+  --text-primary: #ffffff;      /* Primary text - headings, important content */
+  --text-secondary: #cbd5e1;    /* slate-300 - Secondary text, descriptions */
+  --text-tertiary: #94a3b8;     /* slate-400 - Tertiary text, placeholders, icons */
+  --text-muted: #64748b;        /* slate-500 - Very subtle text */
+  
+  /* Border Colors */
+  --border-primary: #334155;    /* slate-700 - Main borders */
+  --border-secondary: #475569;  /* slate-600 - Input borders, subtle dividers */
+  --border-tertiary: #64748b;   /* slate-500 - Hover borders */
+  
+  /* Interactive States */
+  --hover-bg: #475569;          /* slate-600 - General hover background */
+  --hover-bg-light: #334155;    /* slate-700 - Light hover background */
+  --focus-ring: rgba(148, 163, 184, 0.3); /* slate-400 with opacity - Focus rings */
+  
+  /* Accent Colors */
+  --accent-primary: #000000;    /* Black - Primary buttons, CTAs */
+  --accent-primary-hover: #1e293b; /* slate-800 - Primary button hover */
+  --accent-green: #10b981;      /* Success/positive states */
+  --accent-green-bg: rgba(16, 185, 129, 0.1); /* Success background */
+  --accent-blue: #3b82f6;       /* Info/secondary actions */
+  --accent-blue-bg: rgba(59, 130, 246, 0.1); /* Info background */
+  --accent-red: #ef4444;        /* Error/destructive states */
+  --accent-red-bg: rgba(239, 68, 68, 0.1); /* Error background */
+  --accent-purple: #8b5cf6;     /* Special actions */
+  --accent-yellow: #eab308;     /* Warning/highlight */
+  
+  /* Shadow Colors */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, var(--accent-primary) 0%, var(--bg-tertiary) 100%);
+  --gradient-accent: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
+}
+
+@theme {
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-secondary: var(--bg-secondary);
+  --color-bg-tertiary: var(--bg-tertiary);
+  --color-bg-quaternary: var(--bg-quaternary);
+  --color-bg-overlay: var(--bg-overlay);
+  
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-text-muted: var(--text-muted);
+  
+  --color-border-primary: var(--border-primary);
+  --color-border-secondary: var(--border-secondary);
+  --color-border-tertiary: var(--border-tertiary);
+  
+  --color-hover-bg: var(--hover-bg);
+  --color-hover-bg-light: var(--hover-bg-light);
+  --color-focus-ring: var(--focus-ring);
+  
+  --color-accent-primary: var(--accent-primary);
+  --color-accent-primary-hover: var(--accent-primary-hover);
+  --color-accent-green: var(--accent-green);
+  --color-accent-green-bg: var(--accent-green-bg);
+  --color-accent-blue: var(--accent-blue);
+  --color-accent-blue-bg: var(--accent-blue-bg);
+  --color-accent-red: var(--accent-red);
+  --color-accent-red-bg: var(--accent-red-bg);
+  --color-accent-purple: var(--accent-purple);
+  --color-accent-yellow: var(--accent-yellow);
+  
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* Apply the color system to the body */
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Utility classes for common patterns */
+.bg-theme-primary { background-color: var(--bg-primary); }
+.bg-theme-secondary { background-color: var(--bg-secondary); }
+.bg-theme-tertiary { background-color: var(--bg-tertiary); }
+.bg-theme-quaternary { background-color: var(--bg-quaternary); }
+
+.text-theme-primary { color: var(--text-primary); }
+.text-theme-secondary { color: var(--text-secondary); }
+.text-theme-tertiary { color: var(--text-tertiary); }
+.text-theme-muted { color: var(--text-muted); }
+
+.border-theme-primary { border-color: var(--border-primary); }
+.border-theme-secondary { border-color: var(--border-secondary); }
+.border-theme-tertiary { border-color: var(--border-tertiary); }
+
+.btn-primary {
+  background-color: var(--accent-primary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-primary);
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--accent-primary-hover);
+  border-color: var(--border-secondary);
+  transform: scale(1.02);
+}
+
+.card {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: 1rem;
+  box-shadow: var(--shadow-md);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-lg);
+  border-color: var(--border-secondary);
+}
+
+.input-field {
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border-secondary);
+  color: var(--text-primary);
+  border-radius: 0.75rem;
+}
+
+.input-field:focus {
+  border-color: var(--border-tertiary);
+  box-shadow: 0 0 0 3px var(--focus-ring);
+  outline: none;
+}
+
+.modal-overlay {
+  background-color: var(--bg-overlay);
+  backdrop-filter: blur(4px);
+}

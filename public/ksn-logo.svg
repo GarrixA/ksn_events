@@ -1,0 +1,8 @@
+<svg width="160" height="40" viewBox="0 0 160 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="40" height="40" rx="12" fill="#EEF2FF"/>
+  <path d="M12 10H18V18L26 10H33L23.5 19.2L33 30H25.5L18 21.2V30H12V10Z" fill="#4F46E5"/>
+  <path d="M54 27V13H60.4L66.4 22.3V13H72.1V27H65.8L59.6 17.3V27H54Z" fill="#111827"/>
+  <path d="M76.7 27V13H82.4V21.1L89.6 13H96.8L88.6 21.9L97 27H89.3L82.4 22.8V27H76.7Z" fill="#111827"/>
+  <path d="M101.3 27V13H107V22.3L114.1 13H119.7V27H114V17.8L106.8 27H101.3Z" fill="#111827"/>
+  <text x="126" y="25" fill="#111827" font-family="Arial, sans-serif" font-size="14" font-weight="700">KSN</text>
+</svg>
