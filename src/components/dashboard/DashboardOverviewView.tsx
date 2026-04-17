@@ -44,14 +44,14 @@ export function DashboardOverviewView({
   const [hoveredMetric, setHoveredMetric] = useState<string | null>(null);
 
   return (
-    <section className="card space-y-6 rounded-[24px] p-6 transition-all duration-300">
+    <section className="card min-w-0 space-y-6 rounded-[24px] p-4 transition-all duration-300 sm:p-6">
       {/* Dashboard Header */}
-      <div className="flex items-center gap-4">
+      <div className="flex flex-wrap items-center gap-3 sm:gap-4">
         <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-900 shadow-lg">
           <BarChart3 className="h-7 w-7 text-white" />
         </div>
-        <div>
-          <h1 className="flex items-center gap-2 text-4xl font-bold tracking-tight text-white">
+        <div className="min-w-0">
+          <h1 className="flex items-center gap-2 text-2xl font-bold tracking-tight text-white sm:text-4xl">
             Dashboard
             
           </h1>
@@ -122,8 +122,8 @@ export function DashboardOverviewView({
       {/* Analytics and Top Customers */}
       <div className="grid gap-6 xl:grid-cols-[2fr_1fr]">
         {/* Analytics Overview */}
-        <article className="card group rounded-2xl p-6 shadow-md transition-all duration-300">
-          <div className="mb-5 flex items-center justify-between">
+        <article className="card group min-w-0 rounded-2xl p-6 shadow-md transition-all duration-300">
+          <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-blue shadow-md">
                 <Activity className="h-6 w-6 text-white" />
@@ -191,7 +191,7 @@ export function DashboardOverviewView({
             
             {/* Quick Stats Grid */}
             <div className="grid gap-3 text-sm sm:grid-cols-2">
-                <div className="group/stat flex items-center gap-3 rounded-xl border-theme-secondary bg-theme-tertiary px-4 py-3 shadow-sm transition-all duration-200 hover:border-purple-200 hover:bg-purple-50">
+                <div className="group/stat min-w-0 flex items-center gap-3 rounded-xl border-theme-secondary bg-theme-tertiary px-4 py-3 shadow-sm transition-all duration-200 hover:border-purple-200 hover:bg-purple-50">
                 <Ticket className="h-4 w-4 text-accent-purple" />
                 <div>
                   <p className="text-xs text-slate-400">Tickets Listed</p>
@@ -199,7 +199,7 @@ export function DashboardOverviewView({
                 </div>
               </div>
               
-              <div className="group/stat flex items-center gap-3 rounded-xl border-theme-secondary bg-theme-tertiary px-4 py-3 shadow-sm transition-all duration-200 hover:border-purple-200 hover:bg-purple-50">
+              <div className="group/stat min-w-0 flex items-center gap-3 rounded-xl border-theme-secondary bg-theme-tertiary px-4 py-3 shadow-sm transition-all duration-200 hover:border-purple-200 hover:bg-purple-50">
                 <TrendingUp className="h-4 w-4 text-accent-purple" />
                 <div>
                   <p className="text-xs text-slate-400">Tickets Sold</p>
@@ -207,7 +207,7 @@ export function DashboardOverviewView({
                 </div>
               </div>
               
-              <div className="group/stat flex items-center gap-3 rounded-xl border-theme-secondary bg-theme-tertiary px-4 py-3 shadow-sm transition-all duration-200 hover:border-blue-200 hover:bg-blue-50">
+              <div className="group/stat min-w-0 flex items-center gap-3 rounded-xl border-theme-secondary bg-theme-tertiary px-4 py-3 shadow-sm transition-all duration-200 hover:border-blue-200 hover:bg-blue-50">
                 <Calendar className="h-4 w-4 text-accent-blue" />
                 <div>
                   <p className="text-xs text-slate-400">Active Events</p>
@@ -215,7 +215,7 @@ export function DashboardOverviewView({
                 </div>
               </div>
               
-              <div className="group/stat flex items-center gap-3 rounded-xl border-theme-secondary bg-theme-tertiary px-4 py-3 shadow-sm transition-all duration-200 hover:border-orange-200 hover:bg-orange-50">
+              <div className="group/stat min-w-0 flex items-center gap-3 rounded-xl border-theme-secondary bg-theme-tertiary px-4 py-3 shadow-sm transition-all duration-200 hover:border-orange-200 hover:bg-orange-50">
                 <Users className="h-4 w-4 text-accent-orange" />
                 <div>
                   <p className="text-xs text-slate-400">Total Orders</p>
@@ -227,8 +227,8 @@ export function DashboardOverviewView({
         </article>
 
         {/* Top Customers */}
-        <article className="card group rounded-2xl p-6 shadow-md transition-all duration-300">
-          <div className="mb-5 flex items-center justify-between">
+        <article className="card group min-w-0 rounded-2xl p-6 shadow-md transition-all duration-300">
+          <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-orange shadow-md">
                 <Crown className="h-6 w-6 text-white" />
@@ -304,8 +304,8 @@ export function DashboardOverviewView({
       </div>
 
       {/* Recent Ticket Sales */}
-      <article className="card group rounded-2xl p-6 shadow-md transition-all duration-300">
-        <div className="mb-6 flex items-center justify-between">
+      <article className="card group min-w-0 rounded-2xl p-6 shadow-md transition-all duration-300">
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-green shadow-md">
               <TrendingUp className="h-6 w-6 text-white" />

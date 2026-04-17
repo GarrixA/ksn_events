@@ -23,7 +23,24 @@ export type PurchaseItem = {
   createdAtMs: number | null;
 };
 
-export type DashboardView = "dashboard" | "events" | "tickets";
+export type ManagedTicket = {
+  id: string;
+  purchaseId: string;
+  eventId: string;
+  eventTitle: string;
+  eventLocation: string;
+  ownerId: string;
+  buyerFullName: string;
+  buyerEmail: string;
+  buyerPhone: string;
+  ticketCode: string;
+  qrPayload: string;
+  status: "active" | "used";
+  createdAtMs: number | null;
+  usedAtMs: number | null;
+};
+
+export type DashboardView = "dashboard" | "events" | "tickets" | "manageTickets";
 
 export type AnalyticsSummary = {
   totalEvents: number;

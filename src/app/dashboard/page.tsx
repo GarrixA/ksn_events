@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { signOut } from "firebase/auth";
 import {
   addDoc,
@@ -13,6 +14,7 @@ import {
   query,
   serverTimestamp,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollection } from "react-firebase-hooks/firestore";
@@ -22,6 +24,7 @@ import { DashboardTopbar } from "@/components/dashboard/DashboardTopbar";
 import { DashboardOverviewView } from "@/components/dashboard/DashboardOverviewView";
 import { DashboardEventsView } from "@/components/dashboard/DashboardEventsView";
 import { DashboardTicketsView } from "@/components/dashboard/DashboardTicketsView";
+import { DashboardManageTicketsView } from "@/components/dashboard/DashboardManageTicketsView";
 import { 
   DashboardSidebarSkeleton, 
   DashboardTopbarSkeleton, 
@@ -38,6 +41,7 @@ import type {
   PurchaseItem,
   TicketGroup,
   TopCustomer,
+  ManagedTicket,
 } from "@/components/dashboard/dashboardTypes";
 
 export default function DashboardPage() {
@@ -45,6 +49,7 @@ export default function DashboardPage() {
   const [user, authLoading] = useAuthState(auth);
   const [activeView, setActiveView] = useState<DashboardView>("dashboard");
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showSidebarModal, setShowSidebarModal] = useState(false);
 
   // Create-event form state
   const [title, setTitle] = useState("");
@@ -64,6 +69,13 @@ export default function DashboardPage() {
   const [purchasesSnapshot, purchasesLoading] = useCollection(
     query(collection(db, "purchases"), orderBy("createdAt", "desc")),
   );
+  const ticketsQuery = useMemo(() => {
+    if (!user || user.isAnonymous) {
+      return undefined;
+    }
+    return query(collection(db, "tickets"), where("ownerId", "==", user.uid));
+  }, [user]);
+  const [ticketsSnapshot, ticketsLoading] = useCollection(ticketsQuery);
 
   // Derived data -------------------------------------------------------
   const events = useMemo<EventItem[]>(() => {
@@ -115,6 +127,33 @@ export default function DashboardPage() {
     const myEventIds = new Set(myEvents.map((item) => item.id));
     return purchases.filter((item) => myEventIds.has(item.eventId));
   }, [myEvents, purchases]);
+
+  const managedTickets = useMemo<ManagedTicket[]>(() => {
+    if (!user) return [];
+    const rows = (ticketsSnapshot?.docs ?? []).map((docItem) => {
+      const data = docItem.data();
+      const createdAt = data.createdAt as { toMillis?: () => number } | undefined;
+      const usedAt = data.usedAt as { toMillis?: () => number } | undefined;
+      return {
+        id: docItem.id,
+        purchaseId: String(data.purchaseId ?? ""),
+        eventId: String(data.eventId ?? ""),
+        eventTitle: String(data.eventTitle ?? "Untitled event"),
+        eventLocation: String(data.eventLocation ?? ""),
+        ownerId: String(data.ownerId ?? ""),
+        buyerFullName: String(data.buyerFullName ?? "Unknown buyer"),
+        buyerEmail: String(data.buyerEmail ?? ""),
+        buyerPhone: String(data.buyerPhone ?? ""),
+        ticketCode: String(data.ticketCode ?? ""),
+        qrPayload: String(data.qrPayload ?? ""),
+        status: String(data.status ?? "active") as "active" | "used",
+        createdAtMs: createdAt?.toMillis ? createdAt.toMillis() : null,
+        usedAtMs: usedAt?.toMillis ? usedAt.toMillis() : null,
+      };
+    });
+    rows.sort((a, b) => (b.createdAtMs ?? 0) - (a.createdAtMs ?? 0));
+    return rows.filter((ticketItem) => ticketItem.ownerId === user.uid);
+  }, [ticketsSnapshot, user]);
 
   const analytics = useMemo<AnalyticsSummary>(() => {
     const totalEvents = myEvents.length;
@@ -361,22 +400,24 @@ export default function DashboardPage() {
   }
 
   return (
-    <main className="min-h-screen bg-theme-primary p-4 md:p-6">
+    <main className="min-h-screen overflow-x-hidden bg-theme-primary p-4 md:p-6">
       <div className="mx-auto grid w-full gap-5 xl:grid-cols-[255px_1fr]">
-        <DashboardSidebar
-          activeView={activeView}
-          onSelectView={setActiveView}
-          onLogout={() => signOut(auth)}
-        />
+        <div className="hidden xl:block">
+          <DashboardSidebar
+            activeView={activeView}
+            onSelectView={setActiveView}
+            onLogout={() => signOut(auth)}
+          />
+        </div>
 
-        <div className="space-y-5">
-          {activeView === "dashboard" && (
-            <DashboardTopbar
-              activeView={activeView}
-              userEmail={user.email}
-              onOpenCreateEvent={() => setShowCreateModal(true)}
-            />
-          )}
+        <div className="min-w-0 space-y-5">
+          <DashboardTopbar
+            activeView={activeView}
+            userEmail={user.email}
+            onOpenCreateEvent={() => setShowCreateModal(true)}
+            onToggleSidebar={() => setShowSidebarModal((prev) => !prev)}
+            isSidebarOpen={showSidebarModal}
+          />
 
           {activeView === "dashboard" ? (
             <DashboardOverviewView
@@ -394,11 +435,13 @@ export default function DashboardPage() {
               onUpdate={handleUpdate}
               onDelete={handleDelete}
             />
-          ) : (
+          ) : activeView === "tickets" ? (
             <DashboardTicketsView
               ticketsByEvent={ticketsByEvent}
               loading={eventsLoading || purchasesLoading}
             />
+          ) : (
+            <DashboardManageTicketsView tickets={managedTickets} loading={eventsLoading || ticketsLoading} />
           )}
 
             {eventMessage && (
@@ -408,6 +451,37 @@ export default function DashboardPage() {
             )}
         </div>
       </div>
+
+      <AnimatePresence>
+        {showSidebarModal && (
+          <div className="fixed inset-0 z-50 xl:hidden">
+            <motion.button
+              type="button"
+              aria-label="Close sidebar menu"
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => setShowSidebarModal(false)}
+            />
+            <motion.div
+              className="absolute left-0 top-0 h-full w-[85%] max-w-[320px] p-3"
+              initial={{ x: -340, opacity: 0.9 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: -340, opacity: 0.9 }}
+              transition={{ type: "spring", stiffness: 320, damping: 30 }}
+            >
+              <DashboardSidebar
+                activeView={activeView}
+                onSelectView={setActiveView}
+                onLogout={() => signOut(auth)}
+                onActionComplete={() => setShowSidebarModal(false)}
+              />
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
       {/* Create-event modal */}
       {showCreateModal && (

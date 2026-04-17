@@ -40,15 +40,15 @@ export function DashboardEventsView({
   // Loading skeleton component
   if (eventsLoading) {
     return (
-      <section className="rounded-[24px] border border-slate-200/70 bg-accent-blue p-6 shadow-[0_15px_40px_-35px_rgba(15,23,42,0.5)]">
+      <section className="rounded-[24px] border border-theme-primary bg-theme-secondary p-6 shadow-[0_15px_40px_-35px_rgba(15,23,42,0.5)]">
         <div className="mb-6 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-600 shadow-lg">
               <Calendar className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h2 className="text-2xl font-bold tracking-tight text-slate-900">My Events</h2>
-              <p className="text-sm text-slate-500">Manage and track your events</p>
+              <h2 className="text-2xl font-bold tracking-tight text-white">My Events</h2>
+              <p className="text-sm text-slate-300">Manage and track your events</p>
             </div>
           </div>
           <button
@@ -63,12 +63,12 @@ export function DashboardEventsView({
         
         <div className="grid gap-6 md:grid-cols-2">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="animate-pulse rounded-2xl bg-slate-100 p-6">
-              <div className="h-40 rounded-xl bg-slate-200 mb-4"></div>
+            <div key={i} className="animate-pulse rounded-2xl bg-slate-800 p-6">
+              <div className="mb-4 h-40 rounded-xl bg-slate-700"></div>
               <div className="space-y-3">
-                <div className="h-4 w-3/4 rounded bg-slate-200"></div>
-                <div className="h-3 w-full rounded bg-slate-200"></div>
-                <div className="h-3 w-1/2 rounded bg-slate-200"></div>
+                <div className="h-4 w-3/4 rounded bg-slate-700"></div>
+                <div className="h-3 w-full rounded bg-slate-700"></div>
+                <div className="h-3 w-1/2 rounded bg-slate-700"></div>
               </div>
             </div>
           ))}
@@ -78,18 +78,18 @@ export function DashboardEventsView({
   }
 
   return (
-    <section className="group rounded-[24px] border border-slate-200/70 bg-accent-blue-bg p-6 shadow-[0_15px_40px_-35px_rgba(15,23,42,0.5)] transition-all duration-300 hover:shadow-[0_20px_50px_-25px_rgba(15,23,42,0.25)]">
+    <section className="group rounded-[24px] border border-theme-primary bg-theme-secondary p-6 shadow-[0_15px_40px_-35px_rgba(15,23,42,0.5)] transition-all duration-300 hover:shadow-[0_20px_50px_-25px_rgba(15,23,42,0.25)]">
       {/* Header */}
-      <div className="mb-6 flex items-center justify-between gap-3">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-600 shadow-lg">
             <Calendar className="h-6 w-6 text-white" />
           </div>
           <div>
-            <h2 className="flex items-center gap-2 text-2xl font-bold tracking-tight text-slate-900">
+            <h2 className="flex items-center gap-2 text-2xl font-bold tracking-tight text-white">
               Events
             </h2>
-            <p className="text-sm text-slate-500">Manage and track your events</p>
+            <p className="text-sm text-slate-300">Manage and track your events</p>
           </div>
         </div>
         <button
@@ -103,12 +103,12 @@ export function DashboardEventsView({
       </div>
 
       {myEvents.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50/50 py-16 text-center">
-          <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-slate-200">
+        <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-700 bg-slate-800/60 py-16 text-center">
+          <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-slate-700">
             <Calendar className="h-10 w-10 text-slate-400" />
           </div>
-          <h3 className="mb-2 text-lg font-semibold text-slate-600">No events yet</h3>
-          <p className="mb-6 text-sm text-slate-500 max-w-sm">
+          <h3 className="mb-2 text-lg font-semibold text-slate-200">No events yet</h3>
+          <p className="mb-6 max-w-sm text-sm text-slate-400">
             Create your first event to start selling tickets and managing bookings
           </p>
           <button
@@ -135,8 +135,8 @@ export function DashboardEventsView({
                 key={eventItem.id}
                 className={`group/event overflow-hidden rounded-2xl border transition-all duration-300 ${
                   isHovered
-                    ? "border-purple-200 bg-purple-50/50 shadow-2xl scale-[1.02]"
-                    : "border-slate-200 bg-slate-50/80 hover:border-purple-100 shadow-lg hover:shadow-xl"
+                    ? "scale-[1.02] border-purple-500/40 bg-slate-800 shadow-2xl"
+                    : "border-slate-700 bg-slate-800/80 shadow-lg hover:border-purple-500/30 hover:shadow-xl"
                 }`}
                 onMouseEnter={() => setHoveredEventId(eventItem.id)}
                 onMouseLeave={() => setHoveredEventId(null)}
@@ -187,7 +187,7 @@ export function DashboardEventsView({
                     </div>
                   </div>
                 ) : (
-                  <div className="relative h-48 bg-slate-200 flex items-center justify-center">
+                  <div className="relative flex h-48 items-center justify-center bg-slate-700">
                     <div className="text-center">
                       <Calendar className="h-12 w-12 text-slate-400 mx-auto mb-2" />
                       <p className="text-sm text-slate-500">No image</p>
@@ -199,13 +199,13 @@ export function DashboardEventsView({
                 <div className="p-5">
                   {/* Title & Location */}
                   <div className="mb-4">
-                    <h3 className="text-xl font-bold text-slate-900 mb-2 line-clamp-1 group-hover/event:text-purple-900 transition-colors">
+                    <h3 className="mb-2 line-clamp-1 text-xl font-bold text-white transition-colors group-hover/event:text-purple-200">
                       {eventItem.title}
                     </h3>
-                    <p className="text-sm text-slate-600 mb-3 line-clamp-2">
+                    <p className="mb-3 line-clamp-2 text-sm text-slate-300">
                       {eventItem.description}
                     </p>
-                    <div className="flex items-center gap-2 text-xs text-slate-500">
+                    <div className="flex items-center gap-2 text-xs text-slate-400">
                       <MapPin className="h-3 w-3 text-purple-500" />
                       <span className="font-medium uppercase tracking-wide">{eventItem.location}</span>
                     </div>
@@ -213,35 +213,35 @@ export function DashboardEventsView({
 
                   {/* Stats Grid */}
                   <div className="grid grid-cols-2 gap-3 mb-4">
-                    <div className="flex items-center gap-2 rounded-xl bg-white border border-slate-200 px-3 py-3 shadow-sm transition-all duration-200 hover:border-green-200 hover:bg-green-50">
+                    <div className="flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900 px-3 py-3 shadow-sm transition-all duration-200 hover:border-green-500/30">
                       <DollarSign className="h-4 w-4 text-green-600" />
                       <div>
-                        <p className="text-xs text-slate-500">Price</p>
-                        <p className="font-bold text-slate-900">${eventItem.price.toFixed(2)}</p>
+                        <p className="text-xs text-slate-400">Price</p>
+                        <p className="font-bold text-white">${eventItem.price.toFixed(2)}</p>
                       </div>
                     </div>
                     
-                    <div className="flex items-center gap-2 rounded-xl bg-white border border-slate-200 px-3 py-3 shadow-sm transition-all duration-200 hover:border-blue-200 hover:bg-blue-50">
+                    <div className="flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900 px-3 py-3 shadow-sm transition-all duration-200 hover:border-blue-500/30">
                       <Ticket className="h-4 w-4 text-blue-600" />
                       <div>
-                        <p className="text-xs text-slate-500">Available</p>
-                        <p className="font-bold text-slate-900">{eventItem.ticketsAvailable}</p>
+                        <p className="text-xs text-slate-400">Available</p>
+                        <p className="font-bold text-white">{eventItem.ticketsAvailable}</p>
                       </div>
                     </div>
                     
-                    <div className="flex items-center gap-2 rounded-xl bg-white border border-slate-200 px-3 py-3 shadow-sm transition-all duration-200 hover:border-orange-200 hover:bg-orange-50">
+                    <div className="flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900 px-3 py-3 shadow-sm transition-all duration-200 hover:border-orange-500/30">
                       <Users className="h-4 w-4 text-orange-600" />
                       <div>
-                        <p className="text-xs text-slate-500">Sold</p>
-                        <p className="font-bold text-slate-900">{soldCount}</p>
+                        <p className="text-xs text-slate-400">Sold</p>
+                        <p className="font-bold text-white">{soldCount}</p>
                       </div>
                     </div>
                     
-                    <div className="flex items-center gap-2 rounded-xl bg-white border border-slate-200 px-3 py-3 shadow-sm transition-all duration-200 hover:border-purple-200 hover:bg-purple-50">
+                    <div className="flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900 px-3 py-3 shadow-sm transition-all duration-200 hover:border-purple-500/30">
                       <TrendingUp className="h-4 w-4 text-purple-600" />
                       <div>
-                        <p className="text-xs text-slate-500">Revenue</p>
-                        <p className="font-bold text-slate-900">${earnedAmount.toFixed(0)}</p>
+                        <p className="text-xs text-slate-400">Revenue</p>
+                        <p className="font-bold text-white">${earnedAmount.toFixed(0)}</p>
                       </div>
                     </div>
                   </div>
@@ -249,16 +249,16 @@ export function DashboardEventsView({
                   {/* Progress Bar */}
                   <div className="mb-4">
                     <div className="mb-2 flex items-center justify-between">
-                      <div className="flex items-center gap-1 text-xs text-slate-600">
-                        <BarChart3 className="h-3 w-3 text-slate-700" />
+                      <div className="flex items-center gap-1 text-xs text-slate-300">
+                        <BarChart3 className="h-3 w-3 text-slate-300" />
                         <span className="font-medium">Sell-through Rate</span>
                       </div>
                       <div className="flex items-center gap-1">
-                        <span className="text-sm font-bold text-slate-900">{sellThrough.toFixed(1)}%</span>
+                        <span className="text-sm font-bold text-white">{sellThrough.toFixed(1)}%</span>
                         {sellThrough >= 80 && <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />}
                       </div>
                     </div>
-                    <div className="h-2.5 rounded-full bg-slate-200 overflow-hidden">
+                    <div className="h-2.5 overflow-hidden rounded-full bg-slate-700">
                       <div
                         className={`h-full rounded-full transition-all duration-700 ease-out ${
                           sellThrough >= 80 ? 'bg-green-500' :

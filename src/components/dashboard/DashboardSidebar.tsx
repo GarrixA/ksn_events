@@ -6,6 +6,7 @@ import {
   LayoutDashboard, 
   Calendar, 
   Ticket, 
+  ScanLine,
   Settings, 
   LogOut, 
   Sparkles,
@@ -13,12 +14,13 @@ import {
   ChevronRight
 } from "lucide-react";
 
-type DashboardView = "dashboard" | "events" | "tickets";
+type DashboardView = "dashboard" | "events" | "tickets" | "manageTickets";
 
 type DashboardSidebarProps = {
   activeView: DashboardView;
   onSelectView: (view: DashboardView) => void;
   onLogout: () => void;
+  onActionComplete?: () => void;
 };
 
 const items: Array<{ 
@@ -41,9 +43,14 @@ const items: Array<{
     label: "Tickets", 
     icon: Ticket,
   },
+  {
+    id: "manageTickets",
+    label: "Manage Tickets",
+    icon: ScanLine,
+  },
 ];
 
-export function DashboardSidebar({ activeView, onSelectView, onLogout }: DashboardSidebarProps) {
+export function DashboardSidebar({ activeView, onSelectView, onLogout, onActionComplete }: DashboardSidebarProps) {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
 
   return (
@@ -83,7 +90,10 @@ export function DashboardSidebar({ activeView, onSelectView, onLogout }: Dashboa
               <button
                 key={item.id}
                 type="button"
-                onClick={() => onSelectView(item.id)}
+                onClick={() => {
+                  onSelectView(item.id);
+                  onActionComplete?.();
+                }}
                 onMouseEnter={() => setHoveredItem(item.id)}
                 onMouseLeave={() => setHoveredItem(null)}
                 className={`group/nav relative flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left font-medium transition-all duration-200 ${
@@ -142,7 +152,10 @@ export function DashboardSidebar({ activeView, onSelectView, onLogout }: Dashboa
         
         <button
           type="button"
-          onClick={onLogout}
+          onClick={() => {
+            onLogout();
+            onActionComplete?.();
+          }}
           className="group flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left font-medium transition-all duration-200"
           style={{ 
             color: 'var(--accent-red)'

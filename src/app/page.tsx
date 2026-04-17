@@ -65,6 +65,7 @@ export default function Home() {
   const [isSuccessMessage, setIsSuccessMessage] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<EventItem | null>(null);
   const [isPurchasing, setIsPurchasing] = useState(false);
+  const [isTicketStepComplete, setIsTicketStepComplete] = useState(false);
   const [purchaseForm, setPurchaseForm] = useState<PurchaseForm>(emptyPurchaseForm);
   const [hoveredEvent, setHoveredEvent] = useState<string | null>(null);
 
@@ -98,6 +99,7 @@ export default function Home() {
 
   const openPurchaseModal = (event: EventItem) => {
     setSelectedEvent(event);
+    setIsTicketStepComplete(false);
     setPurchaseForm(emptyPurchaseForm);
     setEventMessage("");
   };
@@ -107,7 +109,27 @@ export default function Home() {
       return;
     }
     setSelectedEvent(null);
+    setIsTicketStepComplete(false);
     setPurchaseForm(emptyPurchaseForm);
+  };
+
+  const continueToDetailsStep = () => {
+    if (!selectedEvent) {
+      return;
+    }
+    const requestedTickets = Number(purchaseForm.tickets);
+    if (!Number.isInteger(requestedTickets) || requestedTickets < 1) {
+      setIsSuccessMessage(false);
+      setEventMessage("Number of tickets must be at least 1.");
+      return;
+    }
+    if (requestedTickets > selectedEvent.ticketsAvailable) {
+      setIsSuccessMessage(false);
+      setEventMessage(`Only ${selectedEvent.ticketsAvailable} ticket(s) are left for this event.`);
+      return;
+    }
+    setEventMessage("");
+    setIsTicketStepComplete(true);
   };
 
   const updatePurchaseForm = (field: keyof PurchaseForm, value: string) => {
@@ -187,16 +209,21 @@ export default function Home() {
       });
 
       const payload = (await response.json().catch(() => null)) as
-        | { error?: string; totalAmount?: number }
+        | { error?: string; totalAmount?: number; emailSent?: boolean; emailError?: string }
         | null;
       if (!response.ok) {
         throw new Error(payload?.error || "Unable to complete ticket purchase.");
       }
 
       const totalAmountPaid = Number(payload?.totalAmount ?? selectedEvent.price * requestedTickets);
+      const emailText = payload?.emailSent
+        ? " A QR code ticket has been sent to your email."
+        : payload?.emailError
+          ? ` Purchase saved. Ticket email failed: ${payload.emailError} For Mailtrap Email Testing, add MAILTRAP_SANDBOX=true and MAILTRAP_TEST_INBOX_ID (then restart next dev).`
+          : " Purchase saved, but ticket email was not sent (set MAILTRAP_TOKEN and restart the dev server).";
       setIsSuccessMessage(true);
       setEventMessage(
-        `Ticket purchased successfully. Total amount: $${totalAmountPaid.toFixed(2)}.`,
+        `Ticket purchased successfully. Total amount: $${totalAmountPaid.toFixed(2)}.${emailText}`,
       );
       setPurchaseForm(emptyPurchaseForm);
       setSelectedEvent(null);
@@ -573,35 +600,22 @@ export default function Home() {
       {/* Purchase Modal */}
       {selectedEvent && (
         <div className="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4">
-          <section className="card w-full max-w-2xl rounded-3xl shadow-2xl animate-in slide-in-from-bottom-4 duration-300">
+          <section className="card w-full max-w-5xl rounded-3xl shadow-2xl animate-in slide-in-from-bottom-4 duration-300">
             {/* Modal Header */}
             <div className="border-b border-theme-primary p-6">
               <div className="flex items-start justify-between gap-4">
-                <div className="flex items-start gap-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-900 shadow-md">
-                    <Ticket className="h-6 w-6 text-white" />
+                <div className="flex items-start gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900 shadow-md">
+                    <Ticket className="h-5 w-5 text-white" />
                   </div>
                   <div>
                     <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-900 mb-1">
                       Purchase Tickets
                     </p>
-                    <h3 className="text-2xl font-bold tracking-tight text-theme-primary">
+                    <h3 className="text-xl font-bold tracking-tight text-theme-primary">
                       {selectedEvent.title}
                     </h3>
-                    <div className="flex items-center gap-4 mt-2">
-                      <div className="flex items-center gap-1">
-                        <TrendingUp className="h-4 w-4 text-green-600" />
-                        <span className="text-sm font-medium text-theme-secondary">
-                          ${selectedEvent.price.toFixed(2)} per ticket
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Users className="h-4 w-4 text-orange-600" />
-                        <span className="text-sm font-medium text-theme-secondary">
-                          {selectedEvent.ticketsAvailable} available
-                        </span>
-                      </div>
-                    </div>
+                    <p className="mt-1 text-sm text-theme-secondary">Choose tickets first, then continue to buyer details.</p>
                   </div>
                 </div>
                 <button
@@ -617,6 +631,144 @@ export default function Home() {
 
             {/* Modal Body */}
             <div className="p-6">
+              <div className="grid gap-6 lg:grid-cols-[0.95fr_1.45fr]">
+                <aside className="space-y-4">
+                  {selectedEvent.imageUrl?.trim() ? (
+                    <div className="relative h-72 overflow-hidden rounded-2xl border border-theme-secondary">
+                      <Image
+                        src={selectedEvent.imageUrl.trim()}
+                        alt={selectedEvent.title}
+                        fill
+                        unoptimized
+                        className="object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div className="flex h-72 items-center justify-center rounded-2xl border-2 border-dashed border-slate-600 bg-slate-700">
+                      <Calendar className="h-12 w-12 text-slate-400" />
+                    </div>
+                  )}
+
+                  <div className="space-y-3 rounded-2xl border-theme-secondary bg-theme-tertiary p-4">
+                    <h4 className="text-sm font-semibold uppercase tracking-wide text-theme-secondary">Event Details</h4>
+                    <div className="flex items-start gap-2 text-sm text-theme-secondary">
+                      <MapPin className="mt-0.5 h-4 w-4 text-theme-tertiary" />
+                      <span>{selectedEvent.location}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-theme-secondary">
+                      <TrendingUp className="h-4 w-4 text-green-600" />
+                      <span>${selectedEvent.price.toFixed(2)} per ticket</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-theme-secondary">
+                      <Users className="h-4 w-4 text-orange-600" />
+                      <span>{selectedEvent.ticketsAvailable} available</span>
+                    </div>
+                  </div>
+
+                </aside>
+
+                <div className="space-y-5">
+                  {/* Ticket Selection */}
+                  <div className="space-y-4">
+                    <h4 className="flex items-center gap-2 text-lg font-semibold text-theme-primary">
+                      <Ticket className="h-5 w-5 text-theme-primary" />
+                      Ticket Selection
+                    </h4>
+
+                    <div className="flex items-center gap-4">
+                      <div className="flex-1">
+                        <label className="block text-sm font-medium text-theme-secondary mb-2">
+                          Number of Tickets
+                        </label>
+                        <div className="flex items-center gap-3">
+                          <button
+                            type="button"
+                            onClick={decrementTickets}
+                            disabled={Number(purchaseForm.tickets) <= 1}
+                            className="flex h-10 w-10 items-center justify-center rounded-xl border-theme-secondary bg-theme-tertiary text-theme-secondary transition-all hover:bg-theme-quaternary disabled:cursor-not-allowed disabled:opacity-50"
+                          >
+                            <Minus className="h-4 w-4" />
+                          </button>
+                          <input
+                            type="number"
+                            min="1"
+                            max={selectedEvent.ticketsAvailable}
+                            value={purchaseForm.tickets}
+                            onChange={(e) => updatePurchaseForm("tickets", e.target.value)}
+                            className="input-field w-20 px-3 py-2 text-center text-sm font-semibold transition-all"
+                            required
+                          />
+                          <button
+                            type="button"
+                            onClick={incrementTickets}
+                            disabled={Number(purchaseForm.tickets) >= selectedEvent.ticketsAvailable}
+                            className="flex h-10 w-10 items-center justify-center rounded-xl border-theme-secondary bg-theme-tertiary text-theme-secondary transition-all hover:bg-theme-quaternary disabled:cursor-not-allowed disabled:opacity-50"
+                          >
+                            <Plus className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Total Amount */}
+                      <div className="rounded-xl border-theme-secondary bg-theme-tertiary px-6 py-4">
+                        <div className="flex items-center gap-2 mb-1">
+                          <CreditCard className="h-4 w-4 text-theme-primary" />
+                          <p className="text-sm font-medium text-theme-secondary">Total Amount</p>
+                        </div>
+                        <p className="text-2xl font-bold text-theme-primary">${totalAmount.toFixed(2)}</p>
+                        <p className="text-xs text-theme-tertiary">
+                          {selectedTickets} × ${selectedEvent.price.toFixed(2)}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={continueToDetailsStep}
+                    className="group flex w-full items-center justify-center gap-2 rounded-xl px-6 py-4 text-sm font-bold shadow-lg transition-all duration-200 btn-primary hover:shadow-xl hover:scale-105"
+                  >
+                    Continue
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </button>
+
+                  <div className="space-y-2 rounded-2xl border-theme-secondary bg-theme-tertiary p-4">
+                    <h4 className="text-sm font-semibold uppercase tracking-wide text-theme-secondary">About</h4>
+                    <p className="text-sm leading-6 text-theme-secondary">{selectedEvent.description}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      )}
+      {selectedEvent && isTicketStepComplete && (
+        <div className="modal-overlay fixed inset-0 z-60 flex items-center justify-center p-4">
+          <section className="card w-full max-w-2xl rounded-3xl shadow-2xl animate-in slide-in-from-bottom-4 duration-300">
+            <div className="border-b border-theme-primary p-6">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-900 mb-1">
+                    Buyer Details
+                  </p>
+                  <h3 className="text-xl font-bold tracking-tight text-theme-primary">
+                    {selectedEvent.title}
+                  </h3>
+                  <p className="mt-1 text-sm text-theme-secondary">
+                    {selectedTickets} ticket(s) selected - ${totalAmount.toFixed(2)}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsTicketStepComplete(false)}
+                  disabled={isPurchasing}
+                  className="flex h-10 w-10 items-center justify-center rounded-xl border-theme-secondary text-theme-tertiary transition-all hover:bg-theme-tertiary hover:text-theme-primary disabled:cursor-not-allowed"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+            <div className="p-6">
               <form
                 className="space-y-5"
                 onSubmit={(e) => {
@@ -624,13 +776,12 @@ export default function Home() {
                   void submitPurchase();
                 }}
               >
-                {/* Personal Information */}
                 <div className="space-y-4">
                   <h4 className="flex items-center gap-2 text-lg font-semibold text-theme-primary">
                     <User className="h-5 w-5 text-theme-primary" />
                     Personal Information
                   </h4>
-                  
+
                   <div className="grid gap-4 md:grid-cols-2">
                     <div>
                       <label className="block text-sm font-medium text-theme-secondary mb-2">
@@ -645,7 +796,7 @@ export default function Home() {
                         required
                       />
                     </div>
-                    
+
                     <div>
                       <label className="block text-sm font-medium text-theme-secondary mb-2">
                         Email Address *
@@ -663,7 +814,7 @@ export default function Home() {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div>
                     <label className="block text-sm font-medium text-theme-secondary mb-2">
                       Phone Number *
@@ -682,62 +833,6 @@ export default function Home() {
                   </div>
                 </div>
 
-                {/* Ticket Selection */}
-                <div className="space-y-4">
-                  <h4 className="flex items-center gap-2 text-lg font-semibold text-theme-primary">
-                    <Ticket className="h-5 w-5 text-theme-primary" />
-                    Ticket Selection
-                  </h4>
-                  
-                  <div className="flex items-center gap-4">
-                    <div className="flex-1">
-                      <label className="block text-sm font-medium text-theme-secondary mb-2">
-                        Number of Tickets
-                      </label>
-                      <div className="flex items-center gap-3">
-                        <button
-                          type="button"
-                          onClick={decrementTickets}
-                          disabled={Number(purchaseForm.tickets) <= 1}
-                          className="flex h-10 w-10 items-center justify-center rounded-xl border-theme-secondary bg-theme-tertiary text-theme-secondary transition-all hover:bg-theme-quaternary disabled:cursor-not-allowed disabled:opacity-50"
-                        >
-                          <Minus className="h-4 w-4" />
-                        </button>
-                        <input
-                          type="number"
-                          min="1"
-                          max={selectedEvent.ticketsAvailable}
-                          value={purchaseForm.tickets}
-                          onChange={(e) => updatePurchaseForm("tickets", e.target.value)}
-                          className="input-field w-20 px-3 py-2 text-center text-sm font-semibold transition-all"
-                          required
-                        />
-                        <button
-                          type="button"
-                          onClick={incrementTickets}
-                          disabled={Number(purchaseForm.tickets) >= selectedEvent.ticketsAvailable}
-                          className="flex h-10 w-10 items-center justify-center rounded-xl border-theme-secondary bg-theme-tertiary text-theme-secondary transition-all hover:bg-theme-quaternary disabled:cursor-not-allowed disabled:opacity-50"
-                        >
-                          <Plus className="h-4 w-4" />
-                        </button>
-                      </div>
-                    </div>
-                    
-                    {/* Total Amount */}
-                    <div className="rounded-xl border-theme-secondary bg-theme-tertiary px-6 py-4">
-                      <div className="flex items-center gap-2 mb-1">
-                        <CreditCard className="h-4 w-4 text-theme-primary" />
-                        <p className="text-sm font-medium text-theme-secondary">Total Amount</p>
-                      </div>
-                      <p className="text-2xl font-bold text-theme-primary">${totalAmount.toFixed(2)}</p>
-                      <p className="text-xs text-theme-tertiary">
-                        {selectedTickets} × ${selectedEvent.price.toFixed(2)}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Security Notice */}
                 <div className="flex items-center gap-3 rounded-xl border border-green-200 bg-green-50 px-4 py-3">
                   <Shield className="h-5 w-5 text-green-600" />
                   <div>
@@ -746,29 +841,39 @@ export default function Home() {
                   </div>
                 </div>
 
-                {/* Submit Button */}
-                <button
-                  type="submit"
-                  disabled={isPurchasing}
-                  className={`group flex w-full items-center justify-center gap-2 rounded-xl px-6 py-4 text-sm font-bold shadow-lg transition-all duration-200 ${
-                    isPurchasing
-                      ? "bg-theme-quaternary text-theme-muted cursor-not-allowed"
-                      : "btn-primary hover:shadow-xl hover:scale-105"
-                  }`}
-                >
-                  {isPurchasing ? (
-                    <>
-                      <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                      Processing Payment...
-                    </>
-                  ) : (
-                    <>
-                      <CreditCard className="h-5 w-5 transition-transform group-hover:scale-110" />
-                      Complete Purchase
-                      <Zap className="h-4 w-4 transition-transform group-hover:scale-110" />
-                    </>
-                  )}
-                </button>
+                <div className="grid gap-3 md:grid-cols-2">
+                  <button
+                    type="button"
+                    disabled={isPurchasing}
+                    onClick={() => setIsTicketStepComplete(false)}
+                    className="flex w-full items-center justify-center gap-2 rounded-xl border-theme-secondary bg-theme-tertiary px-6 py-4 text-sm font-semibold text-theme-secondary transition-all duration-200 hover:bg-theme-quaternary disabled:cursor-not-allowed"
+                  >
+                    Back
+                  </button>
+
+                  <button
+                    type="submit"
+                    disabled={isPurchasing}
+                    className={`group flex w-full items-center justify-center gap-2 rounded-xl px-6 py-4 text-sm font-bold shadow-lg transition-all duration-200 ${
+                      isPurchasing
+                        ? "bg-theme-quaternary text-theme-muted cursor-not-allowed"
+                        : "btn-primary hover:shadow-xl hover:scale-105"
+                    }`}
+                  >
+                    {isPurchasing ? (
+                      <>
+                        <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                        Processing Payment...
+                      </>
+                    ) : (
+                      <>
+                        <CreditCard className="h-5 w-5 transition-transform group-hover:scale-110" />
+                        Complete Purchase
+                        <Zap className="h-4 w-4 transition-transform group-hover:scale-110" />
+                      </>
+                    )}
+                  </button>
+                </div>
               </form>
             </div>
           </section>

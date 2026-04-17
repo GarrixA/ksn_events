@@ -32,26 +32,26 @@ export function DashboardTicketsView({ ticketsByEvent, loading }: DashboardTicke
   // Loading skeleton component
   if (loading) {
     return (
-      <section className="rounded-[24px] border border-slate-200/70 bg-white p-6 shadow-[0_15px_40px_-35px_rgba(15,23,42,0.5)]">
+      <section className="rounded-[24px] border border-theme-primary bg-theme-secondary p-6 shadow-[0_15px_40px_-35px_rgba(15,23,42,0.5)]">
         <div className="mb-6 flex items-center gap-3">
           <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-900">
             <Ticket className="h-5 w-5 text-white" />
           </div>
           <div>
-            <h2 className="text-2xl font-bold tracking-tight text-slate-900">Booked Tickets</h2>
-            <p className="text-sm text-slate-500">Open an event to view all booked ticket details.</p>
+            <h2 className="text-2xl font-bold tracking-tight text-white">Booked Tickets</h2>
+            <p className="text-sm text-slate-300">Open an event to view all booked ticket details.</p>
           </div>
         </div>
         
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="animate-pulse rounded-2xl bg-slate-100 p-4">
+            <div key={i} className="animate-pulse rounded-2xl bg-slate-800 p-4">
               <div className="flex items-center justify-between">
                 <div className="space-y-2">
-                  <div className="h-4 w-32 rounded bg-slate-200"></div>
-                  <div className="h-3 w-24 rounded bg-slate-200"></div>
+                  <div className="h-4 w-32 rounded bg-slate-700"></div>
+                  <div className="h-3 w-24 rounded bg-slate-700"></div>
                 </div>
-                <div className="h-6 w-6 rounded bg-slate-200"></div>
+                <div className="h-6 w-6 rounded bg-slate-700"></div>
               </div>
             </div>
           ))}
@@ -61,28 +61,28 @@ export function DashboardTicketsView({ ticketsByEvent, loading }: DashboardTicke
   }
 
   return (
-    <section className="group rounded-[24px] border border-slate-200/70 bg-white p-6 shadow-[0_15px_40px_-35px_rgba(15,23,42,0.5)] transition-all duration-300 hover:shadow-[0_20px_50px_-25px_rgba(15,23,42,0.25)]">
+    <section className="group min-w-0 rounded-[24px] border border-theme-primary bg-theme-secondary p-4 shadow-[0_15px_40px_-35px_rgba(15,23,42,0.5)] transition-all duration-300 hover:shadow-[0_20px_50px_-25px_rgba(15,23,42,0.25)] sm:p-6">
       {/* Header */}
       <div className="mb-6 flex items-center gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900 shadow-lg">
           <Ticket className="h-6 w-6 text-white" />
         </div>
         <div>
-          <h2 className="flex items-center gap-2 text-2xl font-bold tracking-tight text-slate-900">
+          <h2 className="flex items-center gap-2 text-2xl font-bold tracking-tight text-white">
             Booked Tickets
-            <Sparkles className="h-5 w-5 text-slate-700" />
+            <Sparkles className="h-5 w-5 text-slate-300" />
           </h2>
-          <p className="text-sm text-slate-500">Open an event to view all booked ticket details.</p>
+          <p className="text-sm text-slate-300">Open an event to view all booked ticket details.</p>
         </div>
       </div>
 
       {ticketsByEvent.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50/50 py-12 text-center">
-          <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-slate-200">
+        <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-700 bg-slate-800/60 py-12 text-center">
+          <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-slate-700">
             <Ticket className="h-8 w-8 text-slate-400" />
           </div>
-          <p className="text-lg font-medium text-slate-600">No events found</p>
-          <p className="text-sm text-slate-500">Create your first event to start selling tickets!</p>
+          <p className="text-lg font-medium text-slate-200">No events found</p>
+          <p className="text-sm text-slate-400">Create your first event to start selling tickets!</p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -96,8 +96,8 @@ export function DashboardTicketsView({ ticketsByEvent, loading }: DashboardTicke
                 key={event.id}
                 className={`group/card overflow-hidden rounded-2xl border transition-all duration-300 ${
                   isExpanded || isHovered
-                    ? "border-slate-300 bg-slate-100 shadow-lg"
-                    : "border-slate-200 bg-slate-50/80 hover:border-slate-300"
+                    ? "border-slate-500 bg-slate-800 shadow-lg"
+                    : "border-slate-700 bg-slate-800/80 hover:border-slate-500"
                 }`}
                 onMouseEnter={() => setHoveredEventId(event.id)}
                 onMouseLeave={() => setHoveredEventId(null)}
@@ -113,17 +113,17 @@ export function DashboardTicketsView({ ticketsByEvent, loading }: DashboardTicke
                       <Calendar className="h-6 w-6 text-white" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="mb-1 text-lg font-bold text-slate-900 transition-colors duration-200 group-hover/card:text-black">
+                      <p className="mb-1 text-lg font-bold text-white transition-colors duration-200 group-hover/card:text-slate-100">
                         {event.title}
                       </p>
-                      <div className="flex items-center gap-2 text-xs text-slate-500">
+                      <div className="flex items-center gap-2 text-xs text-slate-400">
                         <MapPin className="h-3 w-3" />
                         <span className="font-medium uppercase tracking-wider">{event.location}</span>
                       </div>
                       
                       {/* Progress bar for sell-through rate */}
                       <div className="mt-2 flex items-center gap-2">
-                        <div className="h-1.5 w-24 overflow-hidden rounded-full bg-slate-200">
+                        <div className="h-1.5 w-24 overflow-hidden rounded-full bg-slate-700">
                           <div 
                             className={`h-full rounded-full transition-all duration-500 ${
                               sellThroughRate >= 80 ? 'bg-green-500' :
@@ -133,7 +133,7 @@ export function DashboardTicketsView({ ticketsByEvent, loading }: DashboardTicke
                             style={{ width: `${Math.min(sellThroughRate, 100)}%` }}
                           />
                         </div>
-                        <span className="text-xs font-medium text-slate-600">
+                        <span className="text-xs font-medium text-slate-300">
                           {sellThroughRate.toFixed(0)}% sold
                         </span>
                       </div>
@@ -141,40 +141,40 @@ export function DashboardTicketsView({ ticketsByEvent, loading }: DashboardTicke
                   </div>
 
                   {/* Stats */}
-                  <div className="flex items-center gap-4">
-                    <div className="flex gap-3 text-right text-sm">
+                  <div className="flex items-center gap-3 sm:gap-4">
+                    <div className="hidden gap-3 text-right text-sm sm:flex">
                       {/* Bookings */}
-                      <div className="flex flex-col items-center rounded-lg bg-white/80 px-3 py-2 shadow-sm backdrop-blur-sm transition-all duration-200 group-hover/card:bg-white group-hover/card:shadow-md">
-                        <div className="flex items-center gap-1 text-slate-600">
+                      <div className="flex flex-col items-center rounded-lg bg-slate-900/80 px-3 py-2 shadow-sm backdrop-blur-sm transition-all duration-200 group-hover/card:bg-slate-900 group-hover/card:shadow-md">
+                        <div className="flex items-center gap-1 text-slate-300">
                           <Users className="h-4 w-4 text-slate-700" />
-                          <span className="font-bold text-slate-900">{sales.length}</span>
+                          <span className="font-bold text-white">{sales.length}</span>
                         </div>
-                        <span className="text-xs text-slate-500">bookings</span>
+                        <span className="text-xs text-slate-400">bookings</span>
                       </div>
                       
                       {/* Tickets */}
-                      <div className="flex flex-col items-center rounded-lg bg-white/80 px-3 py-2 shadow-sm backdrop-blur-sm transition-all duration-200 group-hover/card:bg-white group-hover/card:shadow-md">
-                        <div className="flex items-center gap-1 text-slate-600">
+                      <div className="flex flex-col items-center rounded-lg bg-slate-900/80 px-3 py-2 shadow-sm backdrop-blur-sm transition-all duration-200 group-hover/card:bg-slate-900 group-hover/card:shadow-md">
+                        <div className="flex items-center gap-1 text-slate-300">
                           <Ticket className="h-4 w-4 text-purple-500" />
-                          <span className="font-bold text-slate-900">{soldCount}</span>
+                          <span className="font-bold text-white">{soldCount}</span>
                         </div>
-                        <span className="text-xs text-slate-500">tickets</span>
+                        <span className="text-xs text-slate-400">tickets</span>
                       </div>
                       
                       {/* Revenue */}
-                      <div className="flex flex-col items-center rounded-lg bg-white/80 px-3 py-2 shadow-sm backdrop-blur-sm transition-all duration-200 group-hover/card:bg-white group-hover/card:shadow-md">
-                        <div className="flex items-center gap-1 text-slate-600">
+                      <div className="flex flex-col items-center rounded-lg bg-slate-900/80 px-3 py-2 shadow-sm backdrop-blur-sm transition-all duration-200 group-hover/card:bg-slate-900 group-hover/card:shadow-md">
+                        <div className="flex items-center gap-1 text-slate-300">
                           <DollarSign className="h-4 w-4 text-green-500" />
-                          <span className="font-bold text-slate-900">${totalRevenue.toFixed(0)}</span>
+                          <span className="font-bold text-white">${totalRevenue.toFixed(0)}</span>
                         </div>
-                        <span className="text-xs text-slate-500">revenue</span>
+                        <span className="text-xs text-slate-400">revenue</span>
                       </div>
                     </div>
                     
                     {/* Expand Icon */}
                     <ChevronDown
-                      className={`h-5 w-5 text-slate-400 transition-all duration-300 ${
-                        isExpanded ? "rotate-180 text-slate-700" : "group-hover/card:text-slate-600"
+                      className={`h-5 w-5 text-slate-500 transition-all duration-300 ${
+                        isExpanded ? "rotate-180 text-slate-300" : "group-hover/card:text-slate-300"
                       }`}
                     />
                   </div>
@@ -182,28 +182,28 @@ export function DashboardTicketsView({ ticketsByEvent, loading }: DashboardTicke
 
                 {/* Expanded Content */}
                 {isExpanded && (
-                  <div className="animate-in slide-in-from-top-2 border-t border-slate-200 bg-white/90 backdrop-blur-sm duration-300">
+                  <div className="animate-in slide-in-from-top-2 border-t border-slate-700 bg-slate-900/80 backdrop-blur-sm duration-300">
                     {sales.length === 0 ? (
                       <div className="flex items-center justify-center py-8 text-center">
                         <div className="flex flex-col items-center gap-2">
-                          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-100">
+                          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-800">
                             <Ticket className="h-6 w-6 text-slate-400" />
                           </div>
-                          <p className="font-medium text-slate-600">No ticket bookings yet</p>
-                          <p className="text-sm text-slate-500">Bookings will appear here once customers purchase tickets</p>
+                          <p className="font-medium text-slate-200">No ticket bookings yet</p>
+                          <p className="text-sm text-slate-400">Bookings will appear here once customers purchase tickets</p>
                         </div>
                       </div>
                     ) : (
                       <div className="space-y-3 p-5">
                         <div className="mb-4 flex items-center gap-2">
                           <TrendingUp className="h-4 w-4 text-green-500" />
-                          <span className="text-sm font-medium text-slate-700">Recent Bookings</span>
+                          <span className="text-sm font-medium text-slate-200">Recent Bookings</span>
                         </div>
                         
                         {sales.map((sale, index) => (
                           <div
                             key={sale.id}
-                            className="group/sale relative overflow-hidden rounded-xl border border-slate-200/80 bg-white p-4 shadow-sm transition-all duration-200 hover:border-slate-300 hover:shadow-md hover:bg-slate-50"
+                            className="group/sale relative overflow-hidden rounded-xl border border-slate-700 bg-slate-800 p-4 shadow-sm transition-all duration-200 hover:border-slate-500 hover:shadow-md hover:bg-slate-700"
                             style={{ 
                               animationDelay: `${index * 50}ms`,
                             }}
@@ -215,10 +215,10 @@ export function DashboardTicketsView({ ticketsByEvent, loading }: DashboardTicke
                                   {sale.buyerFullName.charAt(0).toUpperCase()}
                                 </div>
                                 <div>
-                                  <p className="font-bold text-slate-900">{sale.buyerFullName}</p>
+                                  <p className="font-bold text-white">{sale.buyerFullName}</p>
                                   <div className="flex items-center gap-1">
                                     <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                                    <span className="text-xs font-medium text-slate-500">Customer</span>
+                                    <span className="text-xs font-medium text-slate-400">Customer</span>
                                   </div>
                                 </div>
                               </div>
@@ -231,19 +231,19 @@ export function DashboardTicketsView({ ticketsByEvent, loading }: DashboardTicke
                             
                             {/* Contact & Purchase Info Grid */}
                             <div className="grid gap-3 text-sm sm:grid-cols-2">
-                              <div className="flex items-center gap-2 text-slate-600">
-                                <Mail className="h-4 w-4 text-slate-700" />
+                              <div className="flex items-center gap-2 text-slate-300">
+                                <Mail className="h-4 w-4 text-slate-300" />
                                 <span>{sale.buyerEmail || "No email"}</span>
                               </div>
-                              <div className="flex items-center gap-2 text-slate-600">
+                              <div className="flex items-center gap-2 text-slate-300">
                                 <Phone className="h-4 w-4 text-green-500" />
                                 <span>{sale.buyerPhone || "No phone"}</span>
                               </div>
-                              <div className="flex items-center gap-2 text-slate-600">
+                              <div className="flex items-center gap-2 text-slate-300">
                                 <Ticket className="h-4 w-4 text-purple-500" />
                                 <span className="font-semibold">{sale.ticketsCount} ticket{sale.ticketsCount !== 1 ? 's' : ''}</span>
                               </div>
-                              <div className="flex items-center gap-2 text-slate-600">
+                              <div className="flex items-center gap-2 text-slate-300">
                                 <Clock className="h-4 w-4 text-orange-500" />
                                 <span>
                                   {sale.createdAtMs 
@@ -260,7 +260,7 @@ export function DashboardTicketsView({ ticketsByEvent, loading }: DashboardTicke
                             </div>
                             
                             {/* Hover effect overlay */}
-                            <div className="absolute inset-0 bg-slate-900/5 opacity-0 transition-opacity duration-200 group-hover/sale:opacity-100" />
+                            <div className="absolute inset-0 bg-slate-950/20 opacity-0 transition-opacity duration-200 group-hover/sale:opacity-100" />
                           </div>
                         ))}
                       </div>

@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useState } from "react";
 import { 
+  X,
+  Menu,
   Search, 
   MessageCircle, 
   Bell, 
@@ -15,27 +17,44 @@ import {
   Zap
 } from "lucide-react";
 
-type DashboardView = "dashboard" | "events" | "tickets";
+type DashboardView = "dashboard" | "events" | "tickets" | "manageTickets";
 
 type DashboardTopbarProps = {
   activeView: DashboardView;
   userEmail: string | null;
   onOpenCreateEvent: () => void;
+  onToggleSidebar: () => void;
+  isSidebarOpen?: boolean;
 };
 
-export function DashboardTopbar({ activeView, userEmail, onOpenCreateEvent }: DashboardTopbarProps) {
+export function DashboardTopbar({
+  activeView,
+  userEmail,
+  onOpenCreateEvent,
+  onToggleSidebar,
+  isSidebarOpen = false,
+}: DashboardTopbarProps) {
   const [searchFocused, setSearchFocused] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const initials = (userEmail ?? "U").slice(0, 1).toUpperCase();
   const userName = userEmail?.split('@')[0] || "User";
 
   return (
-    <header className="card rounded-[24px] p-5 transition-all duration-300">
+    <header className="card min-w-0 rounded-[24px] p-4 transition-all duration-300 sm:p-5">
       <div className="flex flex-wrap items-center justify-between gap-4">
         {/* Search Bar */}
-        <div className={`relative w-full max-w-2xl transition-all duration-300 ${
-          searchFocused ? "transform scale-[1.02]" : ""
-        }`}>
+        <div className="flex w-full max-w-2xl items-center gap-3">
+          <button
+            type="button"
+            onClick={onToggleSidebar}
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border-theme-secondary bg-theme-tertiary text-theme-secondary transition-all duration-200 hover:bg-theme-quaternary xl:hidden"
+            aria-label={isSidebarOpen ? "Close sidebar menu" : "Open sidebar menu"}
+          >
+            {isSidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+          <div className={`relative w-full transition-all duration-300 ${
+            searchFocused ? "transform scale-[1.02]" : ""
+          }`}>
           <div className={`input-field relative px-4 py-3 transition-all duration-300 ${
             searchFocused 
               ? "shadow-lg" 
@@ -60,9 +79,10 @@ export function DashboardTopbar({ activeView, userEmail, onOpenCreateEvent }: Da
             </div>
           </div>
         </div>
+        </div>
 
         {/* Right Side Actions */}
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:gap-3">
           {/* Messages Button */}
           <button
             type="button"
